@@ -1,172 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GODsGhst</title>
-  <style>
-    :root {
-      --background: #000000;
-      --text: #ffffff;
-      --accent: #0071e3;
-      --muted: #aaaaaa;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>GODsGhst</title>
+    <style>
+        :root {
+            --background: #000000;
+            --text: #ffffff;
+            --accent: #0071e3;
+            --muted: #aaaaaa;
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
 
-    body {
-      background-color: var(--background);
-      color: var(--text);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
 
-    section {
-      padding: 6rem 1rem;
-      text-align: center;
-      max-width: 900px;
-      margin: 0 auto;
-    }
+        section {
+            padding: 6rem 1rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
 
-    h1, h2 {
-      background: linear-gradient(45deg, var(--text), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 700;
-    }
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-    h1 {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-    }
+        h1, h2, h3 {
+            background: linear-gradient(45deg, var(--text), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
 
-    h2 {
-      font-size: 2.5rem;
-      margin-bottom: 1.5rem;
-    }
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            margin-bottom: 1rem;
+        }
 
-    p {
-      font-size: 1.2rem;
-      color: var(--muted);
-      max-width: 700px;
-      margin: 0 auto 2rem;
-    }
+        h2 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin-bottom: 1.5rem;
+        }
 
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeIn 1s ease-out forwards;
-    }
+        h3 {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 1rem;
+        }
 
-    @keyframes fadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+        p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--muted);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
 
-    .scroll-indicator {
-      position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 2rem;
-      opacity: 0;
-      animation: fadeInOut 2s ease-in-out infinite;
-    }
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
 
-    @keyframes fadeInOut {
-      0%, 100% { opacity: 0.3; transform: translateY(0); }
-      50% { opacity: 0.8; transform: translateY(-10px); }
-    }
+        .project {
+            background-color: rgba(17, 17, 17, 0.7);
+            padding: 2rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-    .projects {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-    }
+        .project:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: var(--accent);
+        }
 
-    .project {
-      background-color: #111;
-      padding: 2rem;
-      border-radius: 12px;
-      transition: transform 0.3s ease;
-    }
+        .scroll-indicator {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            opacity: 0;
+            animation: fadeInOut 2s ease-in-out infinite;
+            z-index: 100;
+            pointer-events: none;
+        }
 
-    .project:hover {
-      transform: translateY(-5px);
-    }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, 0); }
+            50% { opacity: 0.8; transform: translate(-50%, -10px); }
+        }
 
-    footer {
-      text-align: center;
-      padding: 2rem 1rem;
-      color: var(--muted);
-      font-size: 0.9rem;
-      border-top: 1px solid #222;
-    }
-  </style>
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 4rem;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--text);
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 4rem 1rem;
+            }
+
+            .projects {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-  <section class="fade-in">
-    <h1>GODsGhst</h1>
-    <p>Welcome to my digital space</p>
-  </section>
+    <section id="home">
+        <h1>GODsGhst</h1>
+        <p>Welcome to my digital space</p>
+    </section>
 
-  <div class="scroll-indicator">↓</div>
+    <div class="scroll-indicator">↓</div>
 
-  <section class="fade-in">
-    <h2>About</h2>
-    <p>
-      I'm a creator, a thinker, and a builder. This is my minimalist corner on the web where ideas meet execution. Inspired by simplicity and driven by purpose.
-    </p>
-  </section>
+    <section id="about">
+        <h2>About</h2>
+        <p>
+            I'm a creator, a thinker, and a builder. This is my minimalist corner on the web where ideas meet execution. Inspired by simplicity and driven by purpose.
+        </p>
+    </section>
 
-  <section class="fade-in">
-    <h2>Projects</h2>
-    <div class="projects">
-      <div class="project">
-        <h3>Project One</h3>
-        <p>A modern interface for intuitive experience. Inspired by elegance, built for performance.</p>
-      </div>
-      <div class="project">
-        <h3>Project Two</h3>
-        <p>Exploring the intersection of technology and design through responsive solutions.</p>
-      </div>
-      <div class="project">
-        <h3>Project Three</h3>
-        <p>Focused on minimalism, functionality, and clarity. Design without distractions.</p>
-      </div>
-    </div>
-  </section>
+    <section id="projects">
+        <h2>Projects</h2>
+        <div class="projects">
+            <div class="project">
+                <h3>Project One</h3>
+                <p>A modern interface for intuitive experience. Inspired by elegance, built for performance.</p>
+            </div>
+            <div class="project">
+                <h3>Project Two</h3>
+                <p>Exploring the intersection of technology and design through responsive solutions.</p>
+            </div>
+            <div class="project">
+                <h3>Project Three</h3>
+                <p>Focused on minimalism, functionality, and clarity. Design without distractions.</p>
+            </div>
+        </div>
+    </section>
 
-  <section class="fade-in">
-    <h2>Contact</h2>
-    <p>Let's connect. Reach me at <a href="mailto:contact@godsghst.com" style="color: var(--accent); text-decoration: none;">contact@godsghst.com</a></p>
-  </section>
+    <section id="contact">
+        <h2>Contact</h2>
+        <p>Let's connect. Reach me at <a href="mailto:contact@godsghst.com">contact@godsghst.com</a></p>
+    </section>
 
-  <footer>
-    &copy; 2025 GODsGhst. All rights reserved.
-  </footer>
+    <footer>
+        &copy; 2024 GODsGhst. All rights reserved.
+    </footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('fade-in');
-            observer.unobserve(entry.target);
-          }
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('section').forEach((section) => {
+                observer.observe(section);
+            });
+
+            // Ocultar o indicador de rolagem quando chegar ao final da página
+            window.addEventListener('scroll', () => {
+                const scrollIndicator = document.querySelector('.scroll-indicator');
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+                    scrollIndicator.style.display = 'none';
+                } else {
+                    scrollIndicator.style.display = 'block';
+                }
+            });
         });
-      }, { threshold: 0.1 });
-
-      document.querySelectorAll('section').forEach((el) => observer.observe(el));
-    });
-  </script>
+    </script>
 </body>
 </html>
